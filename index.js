@@ -66,10 +66,12 @@ function drawLines() {
         game.speed = 0.25
         
     }
-    console.log(lines)
+    //console.log(lines)
     var top = fontSize + (height - game.textHeight)
     var offset = game.textOffset
+    ctx.fillStyle = "#e22"
     ctx.fillRect(game.textOffset-2, (height - game.textHeight) + 5, 2, fontSize)
+    ctx.fillStyle = "#fff"
     for (var line of lines) {
 
         ctx.fillText(line,offset,top,width);
@@ -79,6 +81,9 @@ function drawLines() {
     }
     
 }
+var frameTime = performance.now()
+var fpses = []
+var avgfps = -1
 
 function renderFrame() {
     // clear
@@ -88,6 +93,16 @@ function renderFrame() {
     // draw base
     ctx.fillStyle = "#000"
     ctx.fillRect(0, 0, width, height * 0.1)
+
+    // draw lasers!!1!!!
+    ctx.strokeStyle = "#e22"
+    ctx.lineWidth = 2
+    ctx.beginPath();
+    ctx.moveTo(width / 2, height * 0.1);
+    var cwidth = ctx.measureText(game.text.substr(0,1)).width
+    ctx.lineTo(game.textOffset-1, (height - game.textHeight) + 5);
+    ctx.stroke();
+    ctx.lineWidth = 1
     // healthbar
     ctx.fillStyle = "#f00"
     ctx.fillRect(0,0,width,2);
@@ -97,13 +112,36 @@ function renderFrame() {
     game.textHeight += game.speed
 
     drawLines()
+
+    particles.render(ctx, game.running ? 1 : 0)
+
+    // fps
+    var now = performance.now()
+    var fps = Math.floor(1000 / (now - frameTime));
+    frameTime = now
+    fpses.push(fps)
+    if (fpses.length >= 5 || avgfps == -1) {
+        var avg = 0
+        for (var fps of fpses) {
+            avg += fps
+        }
+        avg = avg / fpses.length
+        avgfps = avg
+        fpses = []
+    }
+    ctx.fillStyle = "#fff"
+    ctx.strokeStyle = "#000"
+    ctx.fillText(Math.floor(avgfps) + "fps",0,fontSize)
+    ctx.strokeText(Math.floor(avgfps) + "fps",0,fontSize)
+
     if (game.running) {
         requestAnimationFrame(renderFrame)
     }
+
 }
 
 onkeydown = function(evt) {
-    console.log(evt)
+    //console.log(evt)
     var key = evt.key
     if (game.text.substr(0,1) == key) {
         game.score += 10 *(game.speed * 10)
@@ -112,6 +150,11 @@ onkeydown = function(evt) {
         game.text = game.text.substr(1,game.text.length - 1)
         var cwidth = ctx.measureText(key).width
         game.textOffset += cwidth
+
+        for (var i =0; i < 5000; i++) {
+            particles.create(game.textOffset - (cwidth / 2), (height - game.textHeight) + (fontSize / 2))
+        }
+
         if (game.textOffset > width - cwidth) {
             game.textOffset = 0
             game.textHeight -= fontSize * (2 + (game.streak/50)) 
