@@ -64,7 +64,7 @@ window.addEventListener("mousedown", function() {
                     mousePosition[1] > s - 37 &&
                     mousePosition[1] < s + 11
         if (mouseover) {
-            game = defaultGame
+            game = Object.assign({}, defaultGame);
             screen = renderMainMenu
         }
     }

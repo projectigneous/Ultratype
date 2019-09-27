@@ -15,7 +15,7 @@ const defaultGame = {
     correct: 0,
     wrong: 0,
 }
-var game = defaultGame
+var game = Object.assign({}, defaultGame);
 
 game.textLength = game.text.length
 
@@ -49,7 +49,7 @@ function drawLines() {
         game.score -= lines[0].length * 2
         game.streak = 0
         game.text = game.text.replace(lines[0],"")
-        game.textHeight -= fontSize * 2
+        game.textHeight -= fontSize * 5
         game.textOffset = 0
         game.speed = 0.25
         
@@ -173,7 +173,8 @@ function renderFrame() {
 onkeydown = function(evt) {
     //console.log(evt)
     var key = evt.key.toLowerCase()
-    if (game.running) {
+    console.log(key)
+    if (game.running && key != "shift" && key != "meta" && key != "control" && key != "alt") {
         if (game.text.substr(0,1) == key) {
             game.score += 10 *(game.speed * 10)
             game.correct += 1
