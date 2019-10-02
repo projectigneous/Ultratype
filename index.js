@@ -25,8 +25,31 @@ function centerText(text,height) {
     }
 }
 
+function calculateBtnBounds(y,bwidth,bheight) {
+	return	mousePosition[0] > (width * 0.5) - (bwidth / 2) &&
+			mousePosition[0] < (width * 0.5) + (bwidth / 2) &&
+			mousePosition[1] > y &&
+			mousePosition[1] < (y + bheight)
+}
+
+function renderBtn(y,bwidth,bheight,text) {
+	ctx.strokeStyle = "#fff"
+	ctx.fillStyle = "#fff"
+    ctx.lineWidth = 5
+    
+    ctx.strokeRect((width * 0.5) - (bwidth / 2), y, bwidth, bheight)
+    
+    var mouseover = calculateBtnBounds(y,bwidth,bheight)
+    if (mouseover) {
+        ctx.fillRect((width * 0.5) - (bwidth / 2), y, bwidth, bheight)
+        ctx.fillStyle = "#000"
+    }
+    ctx.font = "50px " + font
+    centerText(text,y + (bheight / 2) + 16)
+}
+
 const fontSize = 30
-const font = "Major Mono Display"
+const font = "Major Mono Display,monospace"
 const maxLines = 5000
 
 

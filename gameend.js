@@ -35,34 +35,12 @@ function gameEndRender() {
     } 
     s = s + 360
     
+	renderBtn(s-50,154,52,"Menu")
 
-    ctx.strokeStyle = "#fff"
-    ctx.lineWidth = 5
-    
-    ctx.strokeRect((width * 0.5) - 75,  s - 37, 150, 48)
-    
-    var mouseover = mousePosition[0] > (width * 0.5) - 75 &&
-                    mousePosition[0] < (width * 0.5) + 75 &&
-                    mousePosition[1] > s - 37 &&
-                    mousePosition[1] < s + 11
-    if (mouseover) {
-        ctx.fillRect((width * 0.5) - 75, s - 37, 150, 48)
-        ctx.fillStyle = "#000"
-    }
-    ctx.font = "36px " + font
-    centerText("Menu",s)
-    
-    
-
-    
-    
 }
 window.addEventListener("mousedown", function() {
     if (screen == gameEndRender) {
-        var mouseover = mousePosition[0] > (width * 0.5) - 75 &&
-                    mousePosition[0] < (width * 0.5) + 75 &&
-                    mousePosition[1] > s - 37 &&
-                    mousePosition[1] < s + 11
+        var mouseover = calculateBtnBounds(s-37,150,48)
         if (mouseover) {
             game = Object.assign({}, defaultGame);
             screen = renderMainMenu
